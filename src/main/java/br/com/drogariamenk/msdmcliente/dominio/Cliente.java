@@ -51,5 +51,18 @@ public class Cliente {
         this.telefone = telefoneDescriptogarfado;
     }
 
+    public Cliente descriptografiaDosDadosSensiveis() {
+        String MINHA_CHAVE = "DXTX";
+        BasicTextEncryptor basicTextEncryptor = new BasicTextEncryptor();
+        basicTextEncryptor.setPassword(MINHA_CHAVE);
+        String cpfDesriptografado = basicTextEncryptor.decrypt(this.cpf);
+        String telefoneDescriptogarfado = basicTextEncryptor.decrypt(this.telefone);
+
+        this.cpf = cpfDesriptografado;
+        this.telefone = telefoneDescriptogarfado;
+
+        return this;
+    }
+
 
 }
