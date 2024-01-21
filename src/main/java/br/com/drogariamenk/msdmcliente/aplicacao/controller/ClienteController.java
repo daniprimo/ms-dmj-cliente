@@ -27,4 +27,16 @@ public class ClienteController {
         return ResponseEntity.ok(clienteSalvo);
     }
 
+    @GetMapping("/buscarPeloCpf/{cpf}")
+    public ResponseEntity buscarClientePeloCpf(@PathVariable String cpf) {
+        Object clienteEncontrado = clienteService.buscarClientePeloCpf(cpf);
+        return ResponseEntity.ok(clienteEncontrado);
+    }
+
+    @GetMapping("/buscarPeloTelefone/{telefone}")
+    public ResponseEntity buscarClientePeloTelefone(@PathVariable String telefone) {
+        Object clienteEncontrado = clienteService.buscarClientePeloTelefone(telefone);
+        return ResponseEntity.ok(clienteEncontrado);
+    }
+
 }

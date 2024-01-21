@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class MQConfig {
 
 
-    @Value("${mq.queues.emissao-cartoes}")
+    @Value("${mq.queues.novo-cliente}")
     private String novoCliente;
 
     @Bean
