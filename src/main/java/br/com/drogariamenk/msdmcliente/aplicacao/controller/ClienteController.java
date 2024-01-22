@@ -1,7 +1,5 @@
 package br.com.drogariamenk.msdmcliente.aplicacao.controller;
 
-import br.com.drogariamenk.msdmcliente.aplicacao.exception.CpfInvalidoException;
-import br.com.drogariamenk.msdmcliente.aplicacao.exception.CpfJaExistenteException;
 import br.com.drogariamenk.msdmcliente.aplicacao.service.ClienteService;
 import br.com.drogariamenk.msdmcliente.dto.request.ClienteSalvarRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +35,11 @@ public class ClienteController {
     public ResponseEntity buscarClientePeloTelefone(@PathVariable String telefone) {
         Object clienteEncontrado = clienteService.buscarClientePeloTelefone(telefone);
         return ResponseEntity.ok(clienteEncontrado);
+    }
+
+    @GetMapping("/todos")
+    public  ResponseEntity buscarTodos() {
+        return ResponseEntity.ok(clienteService.listarTodos());
     }
 
 }

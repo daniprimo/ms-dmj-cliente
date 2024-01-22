@@ -7,7 +7,7 @@ import br.com.drogariamenk.msdmcliente.dto.RecuperandoCpfDTO;
 import br.com.drogariamenk.msdmcliente.dto.mapper.BuscandoTodosOsClientesMapper;
 import br.com.drogariamenk.msdmcliente.dto.mapper.ClienteMapper;
 import br.com.drogariamenk.msdmcliente.dto.mapper.TelefoneMapper;
-import br.com.drogariamenk.msdmcliente.infra.util.CriptografiaService;
+import org.jasypt.util.text.BasicTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,15 +20,15 @@ public class JdbcTabelaDeClienteRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private CriptografiaService criptografiaService;
 
     public boolean isCpfExiste(String cpf) {
+
+
+
         List<RecuperandoCpfDTO> query = jdbcTemplate.query("SELECT cs.cpf FROM cliente cs;", new ClienteMapper());
 
         for (RecuperandoCpfDTO recuperandoCpfDTO : query) {
-            String decrypt = criptografiaService.descriptografarEstaString(recuperandoCpfDTO.getCpf());
-            if (cpf.equals(decrypt)) {
+            if (cpf.equals(recuperandoCpfDTO.getCpf())) {
                     return true;
             }
         }
@@ -40,11 +40,13 @@ public class JdbcTabelaDeClienteRepository {
     }
 
     public boolean isTelefonexiste(String telefone) {
+
+
+
         List<RecuperandoCpfDTO> query = jdbcTemplate.query("SELECT cs.telefone FROM cliente cs;", new TelefoneMapper());
 
         for (RecuperandoCpfDTO recuperandoCpfDTO : query) {
-            String decrypt = criptografiaService.descriptografarEstaString(recuperandoCpfDTO.getCpf());
-            if (telefone.equals(decrypt)) {
+            if (telefone.equals(recuperandoCpfDTO.getCpf())) {
                 return true;
             }
         }
@@ -56,12 +58,13 @@ public class JdbcTabelaDeClienteRepository {
     }
 
     public Cliente buscarClientePeloCpf(String cpf) throws CpfNaoEncontradoException {
+
         List<Cliente> query = jdbcTemplate.query("SELECT * FROM cliente cs;", new BuscandoTodosOsClientesMapper());
 
         for (Cliente cliente : query) {
-            String cpfDescriptografado = criptografiaService.descriptografarEstaString(cliente.getCpf());
-            if (cpf.equals(cpfDescriptografado)) {
-                return cliente.descriptografiaDosDadosSensiveis();
+            Cliente clienteDescriptografado = cliente.descriptografiaDosDadosSensiveis();
+            if (cpf.equals(clienteDescriptografado.getCpf())) {
+                return cliente;
             }
         }
 
@@ -71,12 +74,13 @@ public class JdbcTabelaDeClienteRepository {
     }
 
     public Cliente buscarClientePeloTelefone(String telefone) throws TelefoneNaoEncontradoException {
+
         List<Cliente> query = jdbcTemplate.query("SELECT * FROM cliente cs;", new BuscandoTodosOsClientesMapper());
 
         for (Cliente cliente : query) {
-            String telefoneDescriptografado = criptografiaService.descriptografarEstaString(cliente.getTelefone());
-            if (telefone.equals(telefoneDescriptografado)) {
-                return cliente.descriptografiaDosDadosSensiveis();
+            Cliente clienteDescriptografado = cliente.descriptografiaDosDadosSensiveis();
+            if (telefone.equals(clienteDescriptografado.getTelefone())) {
+                return cliente;
             }
         }
 
