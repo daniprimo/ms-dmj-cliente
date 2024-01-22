@@ -14,4 +14,6 @@ public class DadosNovoClienteCadastradoDTO {
 
     private String telefoneDoCliente;
 
+    private String tipoDeAcao;
+
 }

@@ -12,14 +12,12 @@ import br.com.drogariamenk.msdmcliente.infra.mensageria.NovoClientePublisher;
 import br.com.drogariamenk.msdmcliente.infra.repository.ClienteRepository;
 import br.com.drogariamenk.msdmcliente.infra.repository.JdbcTabelaDeClienteRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.v3.core.util.Json;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +31,6 @@ public class ClienteServiceImplementacao implements ClienteService {
 
     @Autowired
     private NovoClientePublisher novoClientePublisher;
-
 
     public Object listarTodos() {
 
@@ -80,7 +77,8 @@ public class ClienteServiceImplementacao implements ClienteService {
                 clienteSalvo.getId(),
                 clienteSalvo.getNome(),
                 clienteSalvo.getCpf(),
-                clienteSalvo.getTelefone()
+                clienteSalvo.getTelefone(),
+                "NOVO_CLIENTE"
             );
         try {
             novoClientePublisher.novoClienteCadastrado(dadosNovoClienteCadastradoDTO);
@@ -146,6 +144,22 @@ public class ClienteServiceImplementacao implements ClienteService {
         Cliente clienteAtualizado = clienteRepository.save(cliente);
         clienteAtualizado.descriptografiaDosDadosSensiveis();
 
+        DadosNovoClienteCadastradoDTO dadosNovoClienteCadastradoDTO = new DadosNovoClienteCadastradoDTO(
+                clienteAtualizado.getId(),
+                clienteAtualizado.getNome(),
+                clienteAtualizado.getCpf(),
+                clienteAtualizado.getTelefone(),
+
+                "ATUALIZAR_CLIENTE");
+        try {
+            novoClientePublisher.novoClienteCadastrado(dadosNovoClienteCadastradoDTO);
+        } catch (JsonProcessingException e) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ERRO ", "Objeto salvo mais não enviado no mensageria. "+e.getMessage());
+            return jsonObject.toString();
+
+        }
+
         return clienteAtualizado;
     }
 
@@ -177,6 +191,22 @@ public class ClienteServiceImplementacao implements ClienteService {
         Cliente clienteAtualizado = clienteRepository.save(cliente);
         clienteAtualizado.descriptografiaDosDadosSensiveis();
 
+        DadosNovoClienteCadastradoDTO dadosNovoClienteCadastradoDTO = new DadosNovoClienteCadastradoDTO(
+                clienteAtualizado.getId(),
+                clienteAtualizado.getNome(),
+                clienteAtualizado.getCpf(),
+                clienteAtualizado.getTelefone(),
+                "ATUALIZAR_CLIENTE");
+        try {
+            novoClientePublisher.novoClienteCadastrado(dadosNovoClienteCadastradoDTO);
+        } catch (JsonProcessingException e) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ERRO ", "Objeto salvo mais não enviado no mensageria. "+e.getMessage());
+            return jsonObject.toString();
+
+        }
+
+
         return clienteAtualizado;
 
     }
@@ -194,6 +224,20 @@ public class ClienteServiceImplementacao implements ClienteService {
         }
 
         clienteRepository.delete(cliente);
+        DadosNovoClienteCadastradoDTO dadosNovoClienteCadastradoDTO = new DadosNovoClienteCadastradoDTO(
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getCpf(),
+                cliente.getTelefone(),
+                "DELETAR_CLIENTE");
+        try {
+            novoClientePublisher.novoClienteCadastrado(dadosNovoClienteCadastradoDTO);
+        } catch (JsonProcessingException e) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ERRO ", "Objeto salvo mais não enviado no mensageria. "+e.getMessage());
+            return jsonObject.toString();
+
+        }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("DELETE", "Cliente removido com sucesso.");
         return jsonObject.toString();
@@ -212,6 +256,24 @@ public class ClienteServiceImplementacao implements ClienteService {
         }
 
         clienteRepository.delete(cliente);
+
+        DadosNovoClienteCadastradoDTO dadosNovoClienteCadastradoDTO = new DadosNovoClienteCadastradoDTO(
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getCpf(),
+                cliente.getTelefone(),
+                "DELETAR_CLIENTE");
+        try {
+            novoClientePublisher.novoClienteCadastrado(dadosNovoClienteCadastradoDTO);
+        } catch (JsonProcessingException e) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ERRO ", "Objeto salvo mais não enviado no mensageria. "+e.getMessage());
+            return jsonObject.toString();
+
+        }
+
+
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("DELETE", "Cliente removido com sucesso.");
         return jsonObject.toString();

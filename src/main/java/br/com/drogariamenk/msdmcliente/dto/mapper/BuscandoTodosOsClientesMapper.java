@@ -17,7 +17,7 @@ public class BuscandoTodosOsClientesMapper implements RowMapper<Cliente> {
         cliente.setCpf(rs.getString("cpf"));
         cliente.setTelefone(rs.getString("telefone"));
         cliente.setNome(rs.getString("nome"));
-        cliente.setComplementoDoEndereco("complemento_do_endereco");
+        cliente.setComplementoDoEndereco(rs.getString("complemento_do_endereco"));
 
         Endereco endereco = new Endereco();
         endereco.setCep(rs.getString("cep"));
