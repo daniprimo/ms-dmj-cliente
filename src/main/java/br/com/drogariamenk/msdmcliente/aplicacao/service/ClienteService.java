@@ -17,4 +17,6 @@ public interface ClienteService<T> {
     public T deletarClientePeloCpf(String cpf);
     public T deletarClientePeloTelefone(String telefone);
 
+    public T listarTodos();
+
 }

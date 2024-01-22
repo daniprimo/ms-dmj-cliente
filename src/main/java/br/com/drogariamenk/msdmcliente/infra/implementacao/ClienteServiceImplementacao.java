@@ -18,6 +18,9 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 @Service
 @RequiredArgsConstructor
 public class ClienteServiceImplementacao implements ClienteService {
@@ -32,6 +35,12 @@ public class ClienteServiceImplementacao implements ClienteService {
     private NovoClientePublisher novoClientePublisher;
 
 
+    public Object listarTodos() {
+
+        List<Cliente> all = clienteRepository.findAll();
+        List<Cliente> list = all.stream().map(cliente -> cliente.descriptografiaDosDadosSensiveis()).toList();
+        return list;
+    }
 
     @Override
     public Object salvarNovoCliente(ClienteSalvarRequest request)  {
