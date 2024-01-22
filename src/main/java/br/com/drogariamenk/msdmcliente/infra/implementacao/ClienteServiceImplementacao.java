@@ -120,7 +120,33 @@ public class ClienteServiceImplementacao implements ClienteService {
 
     @Override
     public Object atualizarClientePeloCpf(String cpf, AtualizarClienteRequest request) {
-        return null;
+        Cliente cliente;
+        try {
+            verificarSeTelefoneEInexistente(request.getTelefone());
+             cliente = jdbcClienteRepository.buscarClientePeloCpf(cpf);
+        } catch (TelefoneJaExistenteException | CpfNaoEncontradoException e) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ERRO",e.getMessage());
+            return jsonObject.toString();
+        }
+
+        cliente.setNome(request.getNome());
+        cliente.setTelefone(request.getTelefone());
+        cliente.setComplementoDoEndereco(request.getComplementoDoEndereco());
+
+        Endereco endereco = new Endereco(
+                request.getCep(),
+                request.getNumero(),
+                request.getRua(),
+                ""
+        );
+        cliente.setEndereco(endereco);
+        cliente.criptografiaDosDadosSensiveis();
+
+        Cliente clienteAtualizado = clienteRepository.save(cliente);
+        clienteAtualizado.descriptografiaDosDadosSensiveis();
+
+        return clienteAtualizado;
     }
 
     @Override

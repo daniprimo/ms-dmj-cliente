@@ -1,6 +1,7 @@
 package br.com.drogariamenk.msdmcliente.aplicacao.controller;
 
 import br.com.drogariamenk.msdmcliente.aplicacao.service.ClienteService;
+import br.com.drogariamenk.msdmcliente.dto.request.AtualizarClienteRequest;
 import br.com.drogariamenk.msdmcliente.dto.request.ClienteSalvarRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +42,14 @@ public class ClienteController {
     public  ResponseEntity buscarTodos() {
         return ResponseEntity.ok(clienteService.listarTodos());
     }
+
+    @PutMapping("atualizarClientePeloCpf/{cpf}")
+    public ResponseEntity atualizarClientePeloCpf(
+            @PathVariable String cpf,
+            @RequestBody AtualizarClienteRequest request
+            ){
+        return ResponseEntity.ok(clienteService.atualizarClientePeloCpf(cpf, request));
+    }
+
 
 }
