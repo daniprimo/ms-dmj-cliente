@@ -38,7 +38,7 @@ public class ClienteServiceImplementacao implements ClienteService {
     public Object listarTodos() {
 
         List<Cliente> all = clienteRepository.findAll();
-        List<Cliente> list = all.stream().map(cliente -> cliente.descriptografiaDosDadosSensiveis()).toList();
+        List<Cliente> list = all.stream().map(Cliente::descriptografiaDosDadosSensiveis).toList();
         return list;
     }
 
@@ -150,8 +150,35 @@ public class ClienteServiceImplementacao implements ClienteService {
     }
 
     @Override
-    public Object atualizarClientePeloTelefone(String cpf, AtualizarClienteRequest request) {
-        return null;
+    public Object atualizarClientePeloTelefone(String telefone, AtualizarClienteRequest request) {
+        Cliente cliente;
+        try {
+            verificarSeTelefoneEInexistente(request.getTelefone());
+            cliente = jdbcClienteRepository.buscarClientePeloTelefone(telefone);
+        } catch (TelefoneJaExistenteException | TelefoneNaoEncontradoException e) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ERRO",e.getMessage());
+            return jsonObject.toString();
+        }
+
+        cliente.setNome(request.getNome());
+        cliente.setTelefone(request.getTelefone());
+        cliente.setComplementoDoEndereco(request.getComplementoDoEndereco());
+
+        Endereco endereco = new Endereco(
+                request.getCep(),
+                request.getNumero(),
+                request.getRua(),
+                ""
+        );
+        cliente.setEndereco(endereco);
+        cliente.criptografiaDosDadosSensiveis();
+
+        Cliente clienteAtualizado = clienteRepository.save(cliente);
+        clienteAtualizado.descriptografiaDosDadosSensiveis();
+
+        return clienteAtualizado;
+
     }
 
     @Override

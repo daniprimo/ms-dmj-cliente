@@ -13,7 +13,7 @@ public interface ClienteService<T> {
     public T buscarClientePeloCpf(String cpf);
     public T buscarClientePeloTelefone(String telefone);
     public T atualizarClientePeloCpf(String cpf, AtualizarClienteRequest request);
-    public T atualizarClientePeloTelefone(String cpf, AtualizarClienteRequest request);
+    public T atualizarClientePeloTelefone(String telefone, AtualizarClienteRequest request);
     public T deletarClientePeloCpf(String cpf);
     public T deletarClientePeloTelefone(String telefone);
 

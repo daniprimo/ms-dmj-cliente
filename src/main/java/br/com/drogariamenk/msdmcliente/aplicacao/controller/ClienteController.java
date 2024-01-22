@@ -51,5 +51,16 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.atualizarClientePeloCpf(cpf, request));
     }
 
+    @PutMapping("atualizarClientePeloTelefone/{telefone}")
+    public ResponseEntity atualizarClientePeloTelefone(
+            @PathVariable String telefone,
+            @RequestBody AtualizarClienteRequest request
+            ){
+        return ResponseEntity.ok(clienteService
+                .atualizarClientePeloTelefone(telefone, request));
+    }
+
+
+
 
 }
