@@ -183,12 +183,39 @@ public class ClienteServiceImplementacao implements ClienteService {
 
     @Override
     public Object deletarClientePeloCpf(String cpf) {
-        return null;
+
+        Cliente cliente;
+        try {
+            cliente = jdbcClienteRepository.buscarClientePeloCpf(cpf);
+        } catch (CpfNaoEncontradoException e) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ERRO",e.getMessage());
+            return jsonObject.toString();
+        }
+
+        clienteRepository.delete(cliente);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("DELETE", "Cliente removido com sucesso.");
+        return jsonObject.toString();
+
     }
 
     @Override
     public Object deletarClientePeloTelefone(String telefone) {
-        return null;
+        Cliente cliente;
+        try {
+            cliente = jdbcClienteRepository.buscarClientePeloTelefone(telefone);
+        } catch (TelefoneNaoEncontradoException e) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ERRO",e.getMessage());
+            return jsonObject.toString();
+        }
+
+        clienteRepository.delete(cliente);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("DELETE", "Cliente removido com sucesso.");
+        return jsonObject.toString();
+
     }
 
 

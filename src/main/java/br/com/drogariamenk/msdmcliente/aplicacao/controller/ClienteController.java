@@ -7,18 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.DELETE;
+
 @RestController
 @RequestMapping("/cliente")
 public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
-
-
-    @GetMapping
-    public String testando () {
-        return "ok";
-    }
 
     @PostMapping()
     public ResponseEntity salvarNovoCliente (@RequestBody ClienteSalvarRequest cliente){
@@ -58,6 +54,17 @@ public class ClienteController {
             ){
         return ResponseEntity.ok(clienteService
                 .atualizarClientePeloTelefone(telefone, request));
+    }
+
+    @DeleteMapping("deletarClientePeloCpf/{cpf}")
+    public ResponseEntity removerClientePeloCpf(@PathVariable String cpf) {
+        return ResponseEntity.ok(clienteService.deletarClientePeloCpf(cpf));
+    }
+
+    @DeleteMapping("deletarClientePeloTelefone/{telefone}")
+    public ResponseEntity removerClientePeloTelefone(@PathVariable String telefone) {
+        return ResponseEntity.ok(clienteService
+                .deletarClientePeloTelefone(telefone));
     }
 
 
