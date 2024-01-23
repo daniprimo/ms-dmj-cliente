@@ -120,8 +120,11 @@ public class ClienteServiceImplementacao implements ClienteService {
     public Object atualizarClientePeloCpf(String cpf, AtualizarClienteRequest request) {
         Cliente cliente;
         try {
-            verificarSeTelefoneEInexistente(request.getTelefone());
              cliente = jdbcClienteRepository.buscarClientePeloCpf(cpf);
+            if (!request.getTelefone().equals(cliente.getTelefone())) {
+                verificarSeTelefoneEInexistente(request.getTelefone());
+            }
+
         } catch (TelefoneJaExistenteException | CpfNaoEncontradoException e) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("ERRO",e.getMessage());
@@ -167,8 +170,11 @@ public class ClienteServiceImplementacao implements ClienteService {
     public Object atualizarClientePeloTelefone(String telefone, AtualizarClienteRequest request) {
         Cliente cliente;
         try {
-            verificarSeTelefoneEInexistente(request.getTelefone());
             cliente = jdbcClienteRepository.buscarClientePeloTelefone(telefone);
+            if (!request.getTelefone().equals(cliente.getTelefone())) {
+                verificarSeTelefoneEInexistente(request.getTelefone());
+            }
+
         } catch (TelefoneJaExistenteException | TelefoneNaoEncontradoException e) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("ERRO",e.getMessage());

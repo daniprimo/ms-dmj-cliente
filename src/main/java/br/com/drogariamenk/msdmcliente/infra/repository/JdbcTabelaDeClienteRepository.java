@@ -7,6 +7,7 @@ import br.com.drogariamenk.msdmcliente.dto.RecuperandoCpfDTO;
 import br.com.drogariamenk.msdmcliente.dto.mapper.BuscandoTodosOsClientesMapper;
 import br.com.drogariamenk.msdmcliente.dto.mapper.ClienteMapper;
 import br.com.drogariamenk.msdmcliente.dto.mapper.TelefoneMapper;
+import br.com.drogariamenk.msdmcliente.infra.util.CriptografiaService;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +21,8 @@ public class JdbcTabelaDeClienteRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private CriptografiaService criptografiaService;
 
     public boolean isCpfExiste(String cpf) {
 
@@ -28,7 +31,7 @@ public class JdbcTabelaDeClienteRepository {
         List<RecuperandoCpfDTO> query = jdbcTemplate.query("SELECT cs.cpf FROM cliente cs;", new ClienteMapper());
 
         for (RecuperandoCpfDTO recuperandoCpfDTO : query) {
-            if (cpf.equals(recuperandoCpfDTO.getCpf())) {
+            if (cpf.equals(criptografiaService.descriptografar(recuperandoCpfDTO.getCpf()))) {
                     return true;
             }
         }
@@ -46,7 +49,7 @@ public class JdbcTabelaDeClienteRepository {
         List<RecuperandoCpfDTO> query = jdbcTemplate.query("SELECT cs.telefone FROM cliente cs;", new TelefoneMapper());
 
         for (RecuperandoCpfDTO recuperandoCpfDTO : query) {
-            if (telefone.equals(recuperandoCpfDTO.getCpf())) {
+            if (telefone.equals(criptografiaService.descriptografar(recuperandoCpfDTO.getCpf()))) {
                 return true;
             }
         }
